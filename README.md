@@ -13,5 +13,7 @@ pip install -r requirements.txt
 ### Download
 
 ```shell
-python manhuadb.py https://www.manhuadb.com/manhua/xxx
+python manhuadb.py [url] [path] 
 ```
+
+the [path] arg is optional

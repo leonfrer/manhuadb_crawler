@@ -12,7 +12,8 @@ request_head = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0'}
 base_url = "https://www.manhuadb.com"
 opener = request.build_opener()
-opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+opener.addheaders = [
+    ('User-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0')]
 request.install_opener(opener)
 
 
@@ -35,22 +36,20 @@ def download_book_from_link(link: str, parent_path: str):
             img_data = re.search(r'.*\'(.*)\'.*', str(script)).group(1)
             img_data_list = json.loads(
                 base64.b64decode(img_data).decode('utf-8'))
+            threads = []
             for i, img_detail in enumerate(img_data_list):
                 img_url = img_base_url + img_detail['img']
                 img_path = os.path.join(sub_path, '{:03}'.format(
                     img_detail['p']) + "_" + img_detail['img'])
                 print(img_url)
-                threads = []
                 if not os.path.exists(img_path):
                     t = threading.Thread(target=request.urlretrieve,
                                          args=(img_url, img_path))
-                    threads.append(t)
                     t.start()
-                    # request.urlretrieve(
-                    #     img_base_url + img_detail['img'], img_path)
-                    time.sleep(0.02)
-                for t in threads:
-                    t.join()
+                    time.sleep(0.1)
+                    threads.append(t)
+            for t in threads:
+                t.join()
             break
 
 
@@ -68,8 +67,13 @@ if not url.startswith(base_url):
 
 soup = BeautifulSoup(
     request.urlopen(request.Request(url=url, headers=request_head)).read(), 'html.parser')
-current_dir = os.path.join(
-    os.getcwd(), soup.select_one('.comic-info .comic-title').text)
+try:
+    current_dir = os.path.join(
+        next(argv_iter), soup.select_one('.comic-info .comic-title').text)
+except:
+    current_dir = os.path.join(
+        os.getcwd(), soup.select_one('.comic-info .comic-title').text)
+print(current_dir)
 
 tab_names = soup.select('#myTab span')
 tab_panes = soup.select('.tab-content .tab-pane .links-of-books')
