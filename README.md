@@ -1,4 +1,4 @@
-# www.manhuadb.com漫画下载
+# manhuadb 漫画下载
 
 - the url format: https://www.manhuadb.com/manhua/xxx
 
