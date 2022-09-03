@@ -1,6 +1,6 @@
 # www.manhuadb.com漫画下载
 
-# https://www.manhuadb.com/manhua/139
+# the url format: https://www.manhuadb.com/manhua/xxx
 
 from urllib import request
 from bs4 import BeautifulSoup
