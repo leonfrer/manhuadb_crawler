@@ -2,7 +2,7 @@
 
 - the url format: https://www.manhuadb.com/manhua/xxx
 
-### Usage
+## Usage
 
 ### Prepare
 
@@ -17,3 +17,9 @@ python manhuadb.py [url] [path]
 ```
 
 the [path] arg is optional
+
+## TODO
+
+- [ ] Retry after network error
+- [ ] Solution for empty data page
+- [ ] Command for single page
