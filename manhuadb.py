@@ -20,7 +20,7 @@ def download_book_from_link(link: str, parent_path: str):
     sub_url = base_url + link
     img_base_url = ('https://i1.manhuadb.com/ccbaike' +
                     link).replace('_', '/').replace('.html', '/')
-    img_base_url = re.sub(r'/manhua/\d*', '', img_base_url)
+    img_base_url = re.sub(r'/manhua/[^\/]*', '', img_base_url)
     sub_soup = BeautifulSoup(request.urlopen(request.Request(
         url=sub_url, headers=request_head)).read(), 'html.parser')
     sub_title = sub_soup.select_one(
@@ -39,9 +39,12 @@ def download_book_from_link(link: str, parent_path: str):
                 opener.addheaders = [('User-agent', 'Mozilla/5.0')]
                 request.install_opener(opener)
                 print(img_base_url + img_detail['img'])
-                request.urlretrieve(img_base_url + img_detail['img'], os.path.join(
-                    sub_path, '{:03}'.format(img_detail['p']) + "_" + img_detail['img']))
-                time.sleep(0.02)
+                img_path = os.path.join(sub_path, '{:03}'.format(
+                    img_detail['p']) + "_" + img_detail['img'])
+                if not os.path.exists(img_path):
+                    request.urlretrieve(
+                        img_base_url + img_detail['img'], img_path)
+                    time.sleep(0.02)
             break
 
 
