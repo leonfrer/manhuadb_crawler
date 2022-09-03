@@ -10,6 +10,7 @@ import base64
 import json
 import time
 import threading
+import sys
 
 request_head = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0'}
@@ -57,7 +58,14 @@ def download_book_from_link(link: str, parent_path: str):
             break
 
 
-url = 'https://www.manhuadb.com/manhua/116'
+argv_iter = iter(sys.argv)
+next(argv_iter)
+try:
+    url = next(argv_iter)
+except:
+    print("please enter url!")
+    exit(1)
+
 if not url.startswith(base_url):
     print("invalid url")
     exit(1)
