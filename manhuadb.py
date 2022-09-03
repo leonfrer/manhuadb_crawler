@@ -43,18 +43,21 @@ def download_book_from_link(link: str, parent_path: str):
                 img_path = os.path.join(sub_path, '{:03}'.format(
                     img_detail['p']) + "_" + img_detail['img'])
                 print(img_url)
+                threads = []
                 if not os.path.exists(img_path):
                     t = threading.Thread(target=request.urlretrieve,
                                          args=(img_url, img_path))
-                    t.daemon = True
+                    threads.append(t)
                     t.start()
                     # request.urlretrieve(
                     #     img_base_url + img_detail['img'], img_path)
                     time.sleep(0.02)
+                for t in threads:
+                    t.join()
             break
 
 
-url = 'https://www.manhuadb.com/manhua/139'
+url = 'https://www.manhuadb.com/manhua/116'
 if not url.startswith(base_url):
     print("invalid url")
     exit(1)
