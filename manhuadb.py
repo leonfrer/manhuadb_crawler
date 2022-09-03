@@ -9,10 +9,14 @@ import re
 import base64
 import json
 import time
+import threading
 
 request_head = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0'}
 base_url = "https://www.manhuadb.com"
+opener = request.build_opener()
+opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+request.install_opener(opener)
 
 
 def download_book_from_link(link: str, parent_path: str):
@@ -34,16 +38,18 @@ def download_book_from_link(link: str, parent_path: str):
             img_data = re.search(r'.*\'(.*)\'.*', str(script)).group(1)
             img_data_list = json.loads(
                 base64.b64decode(img_data).decode('utf-8'))
-            for img_detail in img_data_list:
-                opener = request.build_opener()
-                opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-                request.install_opener(opener)
-                print(img_base_url + img_detail['img'])
+            for i, img_detail in enumerate(img_data_list):
+                img_url = img_base_url + img_detail['img']
                 img_path = os.path.join(sub_path, '{:03}'.format(
                     img_detail['p']) + "_" + img_detail['img'])
+                print(img_url)
                 if not os.path.exists(img_path):
-                    request.urlretrieve(
-                        img_base_url + img_detail['img'], img_path)
+                    t = threading.Thread(target=request.urlretrieve,
+                                         args=(img_url, img_path))
+                    t.daemon = True
+                    t.start()
+                    # request.urlretrieve(
+                    #     img_base_url + img_detail['img'], img_path)
                     time.sleep(0.02)
             break
 
