@@ -23,3 +23,5 @@ the [path] arg is optional
 - [ ] Retry after network error
 - [ ] Solution for empty data page
 - [ ] Command for single page
+- [ ] Support webp extension
+- [x] Check integrity
